@@ -1,0 +1,331 @@
+:root {
+  --refinement-accent: #c5a6ff;
+}
+
+/* Readable editorial footer, with navigation and contact information given room. */
+.footer {
+  padding-top: 64px;
+}
+.footer-top {
+  grid-template-columns: 1.05fr 0.9fr 1.15fr;
+  gap: 50px;
+}
+.footer-top p {
+  font-size: 15px;
+  line-height: 1.85;
+}
+.footer-top nav {
+  font-size: 16px;
+  gap: 20px 28px;
+}
+.footer-top > div {
+  font-size: 17px;
+  gap: 20px;
+}
+.footer-top > div a {
+  min-height: 26px;
+  gap: 22px;
+}
+.footer-top a {
+  transition: color 0.3s ease;
+}
+.footer-bottom {
+  font-size: 13px;
+  gap: 24px;
+  padding-block: 28px;
+  line-height: 1.7;
+}
+.footer-wordmark {
+  margin-top: 72px;
+}
+
+/* All four illustrations share one stroke and one restrained interaction language. */
+.service-drawing {
+  opacity: 1;
+  transition: none;
+}
+.service-drawing .service-icon {
+  overflow: visible;
+  stroke: #aaa0bb;
+  stroke-width: 1.1;
+}
+.service-drawing .service-icon :is(path, rect, circle, ellipse, polygon) {
+  stroke-width: 1.1;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.service-icon .icon-muted {
+  opacity: 0.38;
+}
+.service-icon .icon-surface {
+  fill: #0b0a10;
+  fill-opacity: 0.92;
+}
+.service-icon .icon-active-face {
+  fill: var(--refinement-accent);
+  fill-opacity: 0.035;
+}
+.service-icon .icon-accent {
+  stroke: var(--refinement-accent);
+  opacity: 0.8;
+}
+.service-icon .icon-beacon {
+  fill: var(--refinement-accent);
+  stroke: var(--refinement-accent);
+  filter: drop-shadow(0 0 3px #c5a6ff33);
+}
+.service-icon .icon-layer {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform 0.38s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.38s ease;
+}
+.service-icon .icon-trace {
+  stroke: var(--refinement-accent);
+  opacity: 0;
+  stroke-dasharray: 230;
+  stroke-dashoffset: 36;
+  transition:
+    opacity 0.35s ease,
+    stroke-dashoffset 0.4s ease;
+}
+.service-icon .icon-beacon,
+.service-icon .icon-active-face {
+  transition:
+    filter 0.35s ease,
+    fill-opacity 0.35s ease;
+}
+.service-row:hover .service-drawing,
+.service-row:focus-visible .service-drawing {
+  transform: none;
+}
+.service-row:is(:hover, :focus-visible) .icon-layer-back {
+  transform: translate(-3px, -2px);
+  opacity: 0.58;
+}
+.service-row:is(:hover, :focus-visible) .icon-layer-front {
+  transform: translate(3px, 2px);
+}
+.service-row:is(:hover, :focus-visible) .icon-trace {
+  opacity: 0.9;
+  stroke-dashoffset: 0;
+}
+.service-row:is(:hover, :focus-visible) .icon-beacon {
+  filter: drop-shadow(0 0 5px #c5a6ff66);
+}
+.service-row:is(:hover, :focus-visible) .icon-active-face {
+  fill-opacity: 0.09;
+}
+.service-detail-art {
+  background: #0e0c13;
+}
+
+/* Two finite background scenes sit in the empty margins, never on top of controls. */
+.services,
+.ai-section,
+.contact {
+  position: relative;
+  isolation: isolate;
+}
+.ambient-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+}
+.ambient-backdrop--orbits {
+  mask-image: linear-gradient(90deg, #000 0%, #000 5%, transparent 10%);
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 5%, transparent 10%);
+}
+.ambient-stage {
+  position: absolute;
+  width: 640px;
+  height: 720px;
+  opacity: 0.66;
+  mask-image: radial-gradient(ellipse, #000 40%, transparent 74%);
+  -webkit-mask-image: radial-gradient(ellipse, #000 40%, transparent 74%);
+}
+.ambient-backdrop--orbits .ambient-stage {
+  left: -340px;
+  top: 31%;
+}
+.ambient-backdrop--network .ambient-stage {
+  width: min(34vw, 480px);
+  height: 450px;
+  left: -65px;
+  top: 120px;
+  opacity: 0.56;
+}
+.ambient-fallback,
+.ambient-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.ambient-fallback {
+  stroke: var(--refinement-accent);
+  stroke-width: 0.75;
+  opacity: 0.35;
+  transition: opacity 0.8s ease;
+}
+.ambient-fallback circle {
+  fill: var(--refinement-accent);
+  fill-opacity: 0.3;
+}
+.ambient-static-highlight {
+  stroke-width: 1.2;
+  opacity: 0.85;
+}
+.ambient-static-core {
+  fill-opacity: 0.9 !important;
+}
+.ambient-canvas {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.ambient-canvas[data-ready='true'] {
+  opacity: 1;
+}
+.ambient-stage:has(.ambient-canvas[data-ready='true']) .ambient-fallback {
+  opacity: 0;
+}
+.ambient-canvas canvas {
+  width: 100%;
+  height: 100%;
+}
+.contact::before {
+  content: '';
+  position: absolute;
+  width: 65%;
+  height: 80%;
+  top: -4%;
+  left: -10%;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(ellipse at 32% 32%, #c5a6ff08, transparent 65%);
+}
+
+@media (max-width: 1100px) {
+  .footer-top {
+    grid-template-columns: 1fr 0.9fr 1.2fr;
+    gap: 30px;
+  }
+  .footer-top > div {
+    font-size: 16px;
+  }
+  .footer-top nav {
+    font-size: 15px;
+    gap: 20px;
+  }
+  .ambient-backdrop--orbits .ambient-stage {
+    left: -390px;
+  }
+  .ambient-backdrop--network .ambient-stage {
+    left: -80px;
+    width: 360px;
+  }
+}
+@media (max-width: 767px) {
+  .footer {
+    padding-top: 42px;
+  }
+  .footer-top {
+    grid-template-columns: 1fr 1.2fr;
+    gap: 34px 25px;
+  }
+  .footer-top > p {
+    grid-column: 1/-1;
+    font-size: 14px;
+  }
+  .footer-top nav {
+    grid-template-columns: 1fr;
+    font-size: 15px;
+    gap: 18px;
+  }
+  .footer-top > div {
+    font-size: 16px;
+    gap: 20px;
+  }
+  .footer-top > div a {
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+  }
+  .footer-bottom {
+    font-size: 13px;
+    gap: 18px;
+    padding-block: 25px;
+  }
+  .footer-wordmark {
+    margin-top: 48px;
+  }
+  .service-row .service-drawing {
+    width: 155px;
+    height: 132px;
+    right: -7px;
+    bottom: 9px;
+    opacity: 0.9;
+  }
+  .service-row:hover .service-drawing {
+    transform: none;
+  }
+  .ambient-backdrop--orbits .ambient-stage {
+    width: 380px;
+    height: 500px;
+    left: -265px;
+    top: 28%;
+    opacity: 0.32;
+  }
+  .ambient-backdrop--orbits {
+    mask-image: linear-gradient(90deg, #000, transparent 32px);
+    -webkit-mask-image: linear-gradient(90deg, #000, transparent 32px);
+  }
+  .ambient-backdrop--network .ambient-stage {
+    width: 260px;
+    height: 300px;
+    left: auto;
+    right: -120px;
+    top: 0;
+    opacity: 0.22;
+  }
+  .contact::before {
+    width: 100%;
+    height: 45%;
+    left: 0;
+    opacity: 0.6;
+  }
+}
+@media (max-width: 430px) {
+  .footer-top {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .footer-top > p {
+    grid-column: auto;
+  }
+  .footer-top nav {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 24px;
+  }
+  .footer-top > div {
+    gap: 18px;
+    font-size: 17px;
+  }
+  .footer-bottom {
+    align-items: start;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .service-icon *,
+  .ambient-fallback,
+  .ambient-canvas {
+    transition: none !important;
+  }
+  .service-row:is(:hover, :focus-visible) .icon-layer {
+    transform: none;
+  }
+}

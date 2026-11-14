@@ -1,0 +1,16 @@
+node_modules
+.next
+.git
+.unlazy
+.env
+.env.*
+!.env.example
+test-results
+coverage
+*.tsbuildinfo
+*-GATES.md
+GATES.md
+*-REPORT.md
+VERIFICATION.md
+HYDRATION-FIX.md
+scripts/verify-refinement-backup.mjs
