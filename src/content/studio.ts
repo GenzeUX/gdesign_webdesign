@@ -112,23 +112,3 @@ export const process = [
   ['Тестирование и запуск', 'Проверяем сценарии, адаптивность и готовность к работе.'],
   ['Поддержка и развитие', 'Остаёмся на связи, помогаем и обсуждаем следующие шаги.'],
 ];
-export interface Project {
-  slug: string;
-  name: string;
-  category: string;
-  screenshots: string[];
-  task?: string;
-  solution?: string;
-  technologies?: string[];
-  result?: string;
-  gallery?: string[];
-  url?: string;
-}
-export const projects: Project[] = [
-  {
-    slug: 'stonebridge',
-    name: 'StoneBridge',
-    category: 'Сайт для агентства недвижимости',
-    screenshots: [],
-  },
-];

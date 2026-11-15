@@ -26,6 +26,13 @@ try {
     '/services/telegram',
     '/projects',
     '/projects/stonebridge',
+    '/projects/gildiya-stroiteley-sibiri',
+    '/projects/technics',
+    '/projects/fathers-scandic',
+    '/projects/sk-alfa',
+    '/projects/svoboda-development',
+    '/projects/karkasvl',
+    '/projects/dovod',
     '/about',
   ];
   const links = new Set();
@@ -36,6 +43,24 @@ try {
     assert.ok(await page.title(), `title ${route}`);
     assert.equal(await page.locator('link[rel=canonical]').count(), 1, `canonical ${route}`);
     assert.equal(await page.locator('html').getAttribute('lang'), 'ru');
+    if (route.startsWith('/projects/')) {
+      assert.equal(await page.getByRole('heading', { name: 'Задача', exact: true }).count(), 1);
+      assert.equal(await page.getByRole('heading', { name: 'Результат', exact: true }).count(), 1);
+      assert.equal(await page.locator('a[href^="https://t.me/portfolio_sites_gen_design/"]').count(), 1);
+      for (const picture of await page.locator('.case-image, .case-gallery img').all()) {
+        await picture.scrollIntoViewIfNeeded();
+        await picture.evaluate((img) => img.decode());
+        assert.ok(await picture.evaluate((img) => img.naturalWidth > 0), `case image loads ${route}`);
+      }
+    }
+    if (route === '/projects') {
+      assert.equal(await page.locator('.portfolio-entry').count(), 8, 'all eight channel cases');
+      for (const picture of await page.locator('.portfolio-image img').all()) {
+        await picture.scrollIntoViewIfNeeded();
+        await picture.evaluate((img) => img.decode());
+      }
+      await page.screenshot({ path: 'test-results/projects-desktop.png', fullPage: true });
+    }
     for (const href of await page
       .locator('a[href^="/"]')
       .evaluateAll((nodes) => nodes.map((n) => n.getAttribute('href'))))
@@ -43,8 +68,20 @@ try {
     results.push({ route, status: response.status(), title: await page.title() });
   }
   for (const link of links) assert.ok(routes.includes(link), `known link ${link}`);
+  await page.setViewportSize({ width: 375, height: 900 });
+  for (const route of routes.filter((route) => route.startsWith('/projects'))) {
+    await page.goto(base + route, { waitUntil: 'networkidle' });
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `portfolio fits mobile ${route}`);
+  }
+  await page.goto(base + '/projects', { waitUntil: 'networkidle' });
+  for (const picture of await page.locator('.portfolio-image img').all()) {
+    await picture.scrollIntoViewIfNeeded();
+    await picture.evaluate((img) => img.decode());
+  }
+  await page.screenshot({ path: 'test-results/projects-mobile.png', fullPage: true });
   const missing = await page.goto(base + '/does-not-exist');
   assert.equal(missing.status(), 404);
+  assert.equal((await page.goto(base + '/projects/unknown-project')).status(), 404);
   for (const path of ['/sitemap.xml', '/robots.txt', '/icon.svg', '/opengraph-image'])
     assert.equal((await page.request.get(base + path)).status(), 200, path);
   for (const width of [320, 375, 430, 768, 1024, 1440, 1920]) {

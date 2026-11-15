@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { siteUrl } from '@/lib/metadata';
+import { projects } from '@/content/projects';
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     '/',
@@ -9,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/services/telegram',
     '/services/ai',
     '/projects',
-    '/projects/stonebridge',
+    ...projects.map(({ slug }) => `/projects/${slug}`),
     '/about',
   ].map((path) => ({
     url: `${siteUrl}${path}`,
