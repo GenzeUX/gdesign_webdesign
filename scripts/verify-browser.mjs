@@ -47,6 +47,9 @@ try {
       assert.equal(await page.getByRole('heading', { name: 'Задача', exact: true }).count(), 1);
       assert.equal(await page.getByRole('heading', { name: 'Результат', exact: true }).count(), 1);
       assert.equal(await page.locator('a[href^="https://t.me/portfolio_sites_gen_design/"]').count(), 1);
+      const original = page.locator('.case-cover .image-provenance a');
+      assert.equal(await original.count(), 1, 'restored cover exposes the exact original');
+      assert.equal((await page.request.get(base + await original.getAttribute('href'))).status(), 200);
       for (const picture of await page.locator('.case-image, .case-gallery img').all()) {
         await picture.scrollIntoViewIfNeeded();
         await picture.evaluate((img) => img.decode());
@@ -55,6 +58,7 @@ try {
     }
     if (route === '/projects') {
       assert.equal(await page.locator('.portfolio-entry').count(), 8, 'all eight channel cases');
+      assert.equal(await page.locator('.portfolio-entry .image-provenance').count(), 8, 'all restorations are labeled');
       for (const picture of await page.locator('.portfolio-image img').all()) {
         await picture.scrollIntoViewIfNeeded();
         await picture.evaluate((img) => img.decode());
@@ -67,7 +71,13 @@ try {
       links.add(href.split('#')[0] || '/');
     results.push({ route, status: response.status(), title: await page.title() });
   }
-  for (const link of links) assert.ok(routes.includes(link), `known link ${link}`);
+  for (const link of links) {
+    if (link.startsWith('/images/projects/')) {
+      const response = await page.request.get(base + link);
+      assert.equal(response.status(), 200, `original asset ${link}`);
+      assert.match(response.headers()['content-type'], /^image\//);
+    } else assert.ok(routes.includes(link), `known link ${link}`);
+  }
   await page.setViewportSize({ width: 375, height: 900 });
   for (const route of routes.filter((route) => route.startsWith('/projects'))) {
     await page.goto(base + route, { waitUntil: 'networkidle' });
@@ -129,21 +139,37 @@ try {
   await page.keyboard.press('ArrowRight');
   assert.match(await page.getByRole('tabpanel').innerText(), /Выдели условия/);
   const form = page.locator('form');
+  await page.evaluate(() => {
+    window.__studioEvents = [];
+    window.addEventListener('studio:analytics', (event) => window.__studioEvents.push(event.detail));
+  });
   assert.equal(await form.evaluate((f) => f.checkValidity()), false);
   await form.getByLabel('Как вас зовут').fill('Анна');
   await form.getByLabel('Как с вами связаться').fill('@example_user');
-  await form.getByLabel('Что планируете?').selectOption({ label: 'Консультация' });
-  await form.getByLabel('Несколько слов о проекте').fill('Хочу обсудить цифровой продукт');
-  await form.locator('input[type=checkbox]').check();
-  await page.waitForTimeout(2700);
-  const responsePromise = page.waitForResponse('**/api/leads');
-  await form.getByRole('button', { name: 'Обсудить проект' }).click();
-  const response = await responsePromise;
-  assert.equal(response.status(), 503, 'unconfigured delivery never pretends success');
-  await page
-    .getByRole('status')
-    .filter({ hasText: 'Отправка через сайт пока не настроена' })
-    .waitFor();
+  // Description and service are optional; preparing a draft never sends a lead.
+  let leadRequests = 0;
+  page.on('request', (request) => { if (request.url().endsWith('/api/leads')) leadRequests++; });
+  await form.getByRole('button', { name: 'Подготовить сообщение' }).click();
+  const draftLink = await form.getByRole('link', { name: 'Открыть Telegram', exact: true }).getAttribute('href');
+  assert.equal(new URL(draftLink).pathname, '/gen_design');
+  assert.match(new URL(draftLink).searchParams.get('text'), /Анна/);
+  assert.equal(leadRequests, 0);
+  assert.match(await form.getByRole('status').innerText(), /пока оно не отправлено/);
+  const eventData = await page.evaluate(() => window.__studioEvents);
+  assert.ok(eventData.some((event) => event.name === 'form_start'));
+  assert.ok(eventData.some((event) => event.name === 'telegram_draft_ready'));
+  assert.ok(!JSON.stringify(eventData).includes('Анна'));
+  assert.ok(!JSON.stringify(eventData).includes('example_user'));
+  assert.ok(!eventData.some((event) => event.name === 'lead_delivered'));
+  await page.goto(base + '/projects/stonebridge', { waitUntil: 'networkidle' });
+  await page.getByRole('link', { name: 'Обсудить похожий проект' }).click();
+  assert.equal(new URL(page.url()).pathname, '/projects/stonebridge');
+  assert.match(await page.locator('.contact-context').first().innerText(), /Stone Bridge estate/);
+  await page.locator('form').getByLabel('Как вас зовут').fill('Анна');
+  await page.locator('form').getByLabel('Как с вами связаться').fill('???');
+  await page.getByRole('button', { name: 'Подготовить сообщение' }).click();
+  assert.equal(await page.locator('input[name=contact]').getAttribute('aria-invalid'), 'true');
+  assert.equal(await page.locator('.contact-draft').count(), 0);
   assert.equal(
     (await page.request.post(base + '/api/leads', { data: {} })).status(),
     403,

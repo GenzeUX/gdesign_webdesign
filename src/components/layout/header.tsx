@@ -54,12 +54,12 @@ export function Header() {
       </Link>
       <nav className="desktop-nav" aria-label="Основная навигация">
         {links.map(([name, href]) => (
-          <Link key={href} href={href} aria-current={href === path ? 'page' : undefined}>
+          <Link key={href} href={href} aria-current={href === path || (href !== '/' && path.startsWith(`${href}/`)) ? 'page' : undefined}>
             {name}
           </Link>
         ))}
       </nav>
-      <Link className="header-cta" href="/#contact">
+      <Link className="header-cta" href="#contact">
         Обсудить проект <ArrowUpRight size={15} />
       </Link>
       <button

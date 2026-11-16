@@ -1,0 +1,13 @@
+# C with the restraint of A
+
+Implementation is on audit/refinement-20261116. The existing production deployment is retained until the owner reviews the preview.
+
+The home page now introduces the actual service, then shows compact service navigation and two featured cases before the approach and AI illustration. Typography is larger, a light approach section separates the dark surfaces, and project/service contact actions keep their context. Real founder identity is used without invented team photos, testimonials, statistics or commitments.
+
+Contact defaults to personal Telegram @gen_design. A short local brief prepares a draft; the visitor explicitly opens Telegram and sends it. The UI never reports this as delivered. The draft can be copied if a Telegram client does not populate the text. No bot credentials are needed for this path. CONTACT_DELIVERY=bot is a separate optional mode that also requires Telegram credentials; review privacy information and delivery/rate-limit configuration before enabling it.
+
+The available portfolio masters remain the exact 800-pixel images from the owner's channel. They are no longer shown wider than their source in cases; preview layouts are restrained. Next/Image serves these small, already-compressed WebP originals with unoptimized to avoid another q=75 encoding pass. Lazy loading below the fold and image dimensions are retained. This improves fidelity of delivery, not the actual source resolution. Do not claim that fine details have been recovered. Keep the untouched originals if any restored derivative is later approved.
+
+The owner subsequently confirmed that no higher-resolution originals exist and explicitly approved AI restoration with a disclosure and access to the original. Eight separate restored cover derivatives are now used. They are labeled on both cards and case pages; direct original-file links remain available. Small photographic and interface details can differ. These are reconstructed presentation previews, not original high-resolution screenshots. The sixteen input files and historical/before gallery images remain untouched. The restored covers use responsive Next/Image at quality 90, while the original low-resolution gallery files avoid another encoding pass.
+
+Motion reveal effects and the client scroll-progress timeline were removed; the signature WebGL wave and CSS interactions remain. Critical Manrope Cyrillic/Latin fonts are self-hosted and preloaded with next/font/local. The wave fallback is preloaded only on the home page. Analytics setup and its activation limits are documented in ANALYTICS.md. Preview robots prohibit indexing.

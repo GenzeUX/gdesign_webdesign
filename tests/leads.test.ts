@@ -27,12 +27,13 @@ test('validates contact, consent, lengths, honeypot and allowed service', () => 
     { consent: false },
     { website: 'spam' },
     { service: 'invalid' },
-    { description: 'short' },
+    { description: 'x'.repeat(3001) },
     { name: '' },
   ])
     assert.equal(leadSchema.safeParse({ ...valid, ...change }).success, false);
   for (const contact of ['user@example.com', '+7 913 949-07-53', 'https://t.me/example_user'])
     assert.equal(leadSchema.safeParse({ ...valid, contact }).success, true);
+  assert.equal(leadSchema.safeParse({ ...valid, description: '' }).success, true);
 });
 test('unconfigured Telegram never returns success', async () => {
   assert.equal((await submitLead(valid, 'ip', { store: new MemoryAbuseStore() })).status, 503);

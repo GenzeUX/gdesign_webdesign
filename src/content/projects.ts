@@ -99,3 +99,18 @@ export const projects: Project[] = [
 
 export const featuredProjects = ['stonebridge', 'svoboda-development', 'gildiya-stroiteley-sibiri']
   .map((slug) => projects.find((project) => project.slug === slug)!);
+
+// Restored derivatives are labeled separately; the untouched images above remain public.
+export const restoredPreviews: Record<string, ProjectImage> = {
+  technics: { src: '/images/projects/technics/restored-preview.webp', width: 1644, height: 957, caption: 'Техникс — восстановленное превью' },
+  'svoboda-development': { src: '/images/projects/svoboda-development/restored-preview.webp', width: 1642, height: 958, caption: 'Svoboda Development — восстановленное превью' },
+  karkasvl: { src: '/images/projects/karkasvl/restored-preview.webp', width: 1668, height: 943, caption: 'KarkasVL — восстановленное превью' },
+  dovod: { src: '/images/projects/dovod/restored-preview.webp', width: 1765, height: 891, caption: 'DOVOD — восстановленное превью' },
+  stonebridge: { src: '/images/projects/stonebridge/restored-preview.webp', width: 1764, height: 892, caption: 'Stone Bridge estate — восстановленное превью' },
+  'gildiya-stroiteley-sibiri': { src: '/images/projects/gildiya-stroiteley-sibiri/restored-preview.webp', width: 1770, height: 889, caption: 'Гильдия Строителей Сибири — восстановленное превью' },
+  'fathers-scandic': { src: '/images/projects/fathers-scandic/restored-preview.webp', width: 1495, height: 1052, caption: 'Father’s Scandic — восстановленное превью' },
+  'sk-alfa': { src: '/images/projects/sk-alfa/restored-preview.webp', width: 1536, height: 1024, caption: 'СК-АЛЬФА — восстановленное превью' },
+};
+export function projectCover(project: Project) {
+  return restoredPreviews[project.slug] || project.images[project.cover];
+}

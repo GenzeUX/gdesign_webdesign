@@ -38,7 +38,7 @@
 }
 .brand,
 .brand-name {
-  font-family: 'Manrope Variable', sans-serif;
+  font-family: var(--font-studio);
   font-size: 21px;
   font-weight: 500;
   letter-spacing: -0.9px;
@@ -270,7 +270,7 @@
   border-radius: 2px;
 }
 .footer-wordmark {
-  font-family: 'Manrope Variable', sans-serif;
+  font-family: var(--font-studio);
   font-weight: 430;
   letter-spacing: -0.065em;
   font-size: clamp(50px, 16vw, 300px);

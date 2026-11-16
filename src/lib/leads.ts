@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
+import { isContactAddress } from './contact-message';
 
 export const leadSchema = z.object({
   name: z.string().trim().min(2).max(80),
@@ -10,10 +11,7 @@ export const leadSchema = z.object({
     .max(150)
     .refine(
       (v) =>
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ||
-        /^@?[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(v) ||
-        /^https:\/\/t\.me\/[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(v) ||
-        /^\+?[\d ()-]{10,25}$/.test(v),
+        isContactAddress(v),
       'Укажите email, телефон или Telegram username.',
     ),
   service: z.enum([
@@ -23,7 +21,8 @@ export const leadSchema = z.object({
     'AI и автоматизация',
     'Консультация',
   ]),
-  description: z.string().trim().min(10).max(3000),
+  description: z.string().trim().max(3000).default(''),
+  project: z.string().trim().max(160).optional(),
   consent: z.literal(true),
   website: z.string().max(0),
   startedAt: z.number().finite(),
@@ -108,7 +107,7 @@ export async function submitLead(input: unknown, clientKey: string, deps: Depend
       'Слишком много обращений. Попробуйте через 15 минут или напишите в Telegram.',
     );
   const fingerprint = createHash('sha256')
-    .update(JSON.stringify([lead.name, lead.contact, lead.service, lead.description]))
+    .update(JSON.stringify([lead.name, lead.contact, lead.service, lead.description, lead.project]))
     .digest('hex');
   const duplicateKey = `delivery:${fingerprint}`;
   if (!(await deps.store.take(duplicateKey, 1, 600)))
@@ -117,7 +116,7 @@ export async function submitLead(input: unknown, clientKey: string, deps: Depend
       'Такая заявка уже отправляется или была отправлена. Если нужно уточнение, напишите в Telegram.',
     );
   try {
-    const text = `Новая заявка G. DESIGN\n\nИмя: ${lead.name}\nКонтакт: ${lead.contact}\nНаправление: ${lead.service}\n\n${lead.description}\n\nСогласие на обработку данных: получено`;
+    const text = `Новая заявка G. DESIGN\n\nИмя: ${lead.name}\nКонтакт: ${lead.contact}\nНаправление: ${lead.service}${lead.project ? `\nКейс: ${lead.project}` : ''}\n\n${lead.description || 'Описание не указано'}\n\nСогласие на обработку данных: получено`;
     const response = await (deps.fetcher || fetch)(
       `https://api.telegram.org/bot${deps.token}/sendMessage`,
       {

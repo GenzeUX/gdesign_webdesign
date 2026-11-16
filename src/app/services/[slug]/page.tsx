@@ -7,6 +7,9 @@ import { PageHero } from '@/components/sections/page-hero';
 import { Contact } from '@/components/sections/contact';
 import { ServiceArt } from '@/components/sections/services';
 import { AIFlow } from '@/components/sections/ai-flow';
+import { Button } from '@/components/ui';
+import { projects } from '@/content/projects';
+import Image from 'next/image';
 export function generateStaticParams() {
   return services.map((s) => ({ slug: s.id }));
 }
@@ -21,7 +24,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   if (!s) notFound();
   return (
     <>
-      <PageHero label={s.title} title={s.description} description={s.detail} />
+      <PageHero label={s.title} title={s.headline} description={s.detail} />
+      <div className="container service-hero-action"><Button href="#contact">Обсудить задачу</Button></div>
       <section className="service-detail container">
         <div className="service-detail-art">
           <ServiceArt type={s.shape} />
@@ -33,7 +37,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             {s.items.map((i) => (
               <li key={i}>
                 {i}
-                <ArrowUpRight size={18} />
               </li>
             ))}
           </ul>
@@ -43,6 +46,10 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </p>
         </div>
       </section>
+      {s.id === 'web' ? <section className="container service-case section">
+        <div><span className="eyebrow">Пример работы</span><h2>Сайт, который объединяет предложения агентства.</h2><p>{projects.find((project) => project.slug === 'stonebridge')!.summary}</p><Link className="text-link" href="/projects/stonebridge">Кейс Stone Bridge estate <ArrowUpRight size={18} aria-hidden="true" /></Link></div>
+        <Link href="/projects/stonebridge"><Image src="/images/projects/stonebridge/1.webp" width={800} height={404} unoptimized alt="Сайт Stone Bridge estate" /></Link>
+      </section> : null}
       {s.id === 'ai' ? (
         <section className="container section">
           <h2 className="mb-10">Как это может работать</h2>
@@ -83,7 +90,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             </Link>
           ))}
       </section>
-      <Contact />
+      <Contact service={s.title} />
     </>
   );
 }

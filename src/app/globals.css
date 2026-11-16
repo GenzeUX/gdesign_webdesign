@@ -2,7 +2,7 @@
 @theme inline {
   --color-background: var(--bg);
   --color-accent: var(--accent);
-  --font-sans: 'Manrope Variable', sans-serif;
+  --font-sans: var(--font-studio);
 }
 :root {
   --bg: #08080d;
@@ -27,7 +27,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: 'Manrope Variable', sans-serif;
+  font-family: var(--font-studio);
   font-size: 15px;
   -webkit-font-smoothing: antialiased;
 }
@@ -147,7 +147,7 @@ canvas {
 .brand {
   display: inline-flex;
   align-items: baseline;
-  font-family: 'Space Grotesk Variable', sans-serif;
+  font-family: var(--font-studio);
   font-weight: 650;
   font-size: 34px;
   letter-spacing: -2px;
@@ -335,7 +335,7 @@ canvas {
   font-size: 10px;
 }
 .hero-index {
-  font-family: 'Space Grotesk Variable', sans-serif;
+  font-family: var(--font-studio);
 }
 .wave-art {
   position: absolute;
@@ -460,10 +460,10 @@ canvas {
   align-self: start;
   padding-top: 8px;
   color: var(--muted);
-  font-family: 'Space Grotesk Variable', sans-serif;
+  font-family: var(--font-studio);
 }
 .service-english {
-  font-family: 'Space Grotesk Variable', sans-serif;
+  font-family: var(--font-studio);
   font-size: 10px;
   color: var(--accent);
   letter-spacing: 0.1em;
@@ -616,7 +616,7 @@ canvas {
   width: 85px;
   display: grid;
   place-content: center;
-  font-family: 'Space Grotesk Variable', sans-serif;
+  font-family: var(--font-studio);
   font-size: 38px;
   border-radius: 22px;
   background: linear-gradient(140deg, #66517f, #20192e);
@@ -1085,7 +1085,7 @@ canvas {
 }
 .footer-wordmark {
   display: block;
-  font-family: 'Space Grotesk Variable', sans-serif;
+  font-family: var(--font-studio);
   font-size: clamp(50px, 17vw, 320px);
   letter-spacing: -0.075em;
   line-height: 1.1;
