@@ -58,7 +58,8 @@ try {
     }
     if (route === '/projects') {
       assert.equal(await page.locator('.portfolio-entry').count(), 8, 'all eight channel cases');
-      assert.equal(await page.locator('.portfolio-entry .image-provenance').count(), 8, 'all restorations are labeled');
+      assert.equal(await page.locator('.portfolio-entry .image-provenance a').count(), 8, 'all originals remain accessible');
+      assert.doesNotMatch(await page.locator('.projects').innerText(), /AI-реставрация|восстановлено с помощью AI/);
       for (const picture of await page.locator('.portfolio-image img').all()) {
         await picture.scrollIntoViewIfNeeded();
         await picture.evaluate((img) => img.decode());
@@ -138,6 +139,21 @@ try {
   assert.match(await page.getByRole('tabpanel').innerText(), /Где найти документы/);
   await page.keyboard.press('ArrowRight');
   assert.match(await page.getByRole('tabpanel').innerText(), /Выдели условия/);
+  await page.keyboard.press('Home');
+  assert.match(await page.getByRole('tabpanel').innerText(), /Хочу обсудить сайт/);
+  await page.locator('.flow-demo').scrollIntoViewIfNeeded();
+  await page.waitForFunction(() => document.querySelector('.flow-demo')?.dataset.running === 'true');
+  const orbit = page.locator('.orbit-track-one');
+  assert.equal(await orbit.evaluate(el => getComputedStyle(el).animationPlayState), 'running');
+  await page.getByRole('button', { name: 'Приостановить анимацию AI-сценария' }).click();
+  assert.equal(await orbit.evaluate(el => getComputedStyle(el).animationPlayState), 'paused');
+  const held = await orbit.evaluate(el => getComputedStyle(el).transform);
+  await page.waitForTimeout(160);
+  assert.equal(await orbit.evaluate(el => getComputedStyle(el).transform), held, 'pause freezes the scene');
+  await page.getByRole('button', { name: 'Продолжить анимацию AI-сценария' }).click();
+  await page.locator('h1').scrollIntoViewIfNeeded();
+  await page.waitForFunction(() => document.querySelector('.flow-demo')?.dataset.running === 'false');
+  assert.equal(await orbit.evaluate(el => getComputedStyle(el).animationPlayState), 'paused', 'offscreen scene does no animation work');
   const form = page.locator('form');
   await page.evaluate(() => {
     window.__studioEvents = [];
@@ -203,6 +219,7 @@ try {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(base, { waitUntil: 'networkidle' });
   assert.equal(await page.locator('.wave-canvas canvas').count(), 0, 'static reduced-motion scene');
+  assert.equal(await page.locator('.orbit-track-one').evaluate(el => getComputedStyle(el).animationName), 'none', 'AI scene respects reduced motion');
   assert.equal(
     (await page.request.get(base + '/images/light-field.webp')).status(),
     200,

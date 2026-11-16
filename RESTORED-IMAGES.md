@@ -1,6 +1,6 @@
 # Restored portfolio covers
 
-Owner approval: use restoration with a visible disclosure and access to the original. Eight restored covers are saved at public/images/projects/<slug>/restored-preview.webp; all input images remain at their original numbered paths. Every card and case page labels the restoration and links to its original. Never present these derivatives as untouched screenshots or invent a new case from them.
+Owner approval: use restoration with access to the original. The owner subsequently requested removal of the visible AI-restoration captions. Eight restored covers are saved at public/images/projects/<slug>/restored-preview.webp; all input images remain at their original numbered paths. Every card and case page retains a link to its original. Never present these derivatives as untouched screenshots or invent a new case from them.
 
 Method: built-in imagegen edits, visually reviewed against the input screenshots. Selected PNG outputs were encoded as quality-94 WebP. The tool can reconstruct photo/interface microdetails; source resolution has not been recovered mathematically. A navigation typo in the first Technics variant was corrected in a second edit before selection. Original before/after and settlement gallery assets are preserved.
 
@@ -18,3 +18,5 @@ Method: built-in imagegen edits, visually reviewed against the input screenshots
 Prompt set: edit the attached real website screenshot; conservative restoration/upscaling only, approximately 2×, identical aspect ratio and uncropped composition; preserve UI geometry, margins, typography, positions, menus, logos, buttons, colors and photos; reduce compression noise and mild blur; preserve all readable text verbatim; keep unreadable text soft instead of inventing letters/contact numbers; preserve identity in portraits; no new objects, claims or redesign. Each prompt also named its project and quoted its legible headline/button text from the original. The Technics correction prompt requested only changing the incorrect navigation text to «Наши работы», retaining the rest of the selected image.
 
 The publication behavior and disclosure matter more than the apparent sharpness: keep direct access to the real source and do not use generated detail as evidence for factual claims about a client website.
+
+Owner follow-up: remove visible AI-restoration captions; retain direct access to original images. The AI demonstration now uses CSS-only orbital lines, packet travel and sequential emphasis. A pause button, offscreen/hidden-tab suspension and reduced-motion stills are included. No animation dependency, video or new image asset is added.

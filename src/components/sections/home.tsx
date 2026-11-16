@@ -7,7 +7,6 @@ import { Wave } from '../three/wave';
 import { Reveal } from '../motion/reveal';
 import { AIFlow } from './ai-flow';
 import { Brand } from '../ui';
-import { AmbientBackdrop } from '../three/ambient-backdrop';
 export function Hero() {
   preload('/images/light-field.webp', { as: 'image', fetchPriority: 'high' });
   return (
@@ -73,7 +72,7 @@ export function Manifesto() {
 }
 export function ServicesOverview() {
   return (
-    <section className="services-overview container" aria-label="Направления работы">
+    <section className="services-overview container" id="manifesto" aria-label="Направления работы">
       {services.map((service) => (
         <Link href={service.href} key={service.id}>
           <span>{service.title}</span><ArrowUpRight size={19} aria-hidden="true" />
@@ -84,10 +83,19 @@ export function ServicesOverview() {
 }
 export function Approach() {
   return (
-    <section className="approach-band">
+    <section className="approach-band" aria-labelledby="approach-title">
       <div className="container approach-content">
-        <h2>Сначала задача.<br />Затем решение.</h2>
-        <div><p>Разбираемся в продукте и аудитории. Согласовываем структуру и визуальное направление. Разрабатываем, проверяем на телефонах и компьютерах, готовим к запуску.</p><p>Состав работ, сроки и бюджет обсуждаем до начала проекта.</p><Link href="/about" className="text-link">Как устроена работа <ArrowUpRight size={18} aria-hidden="true" /></Link></div>
+        <div className="approach-heading">
+          <span className="eyebrow"><i /> Без неопределённости</span>
+          <h2 id="approach-title">Вы понимаете,<br />за что <em>платите.</em></h2>
+          <p>От первого разговора до запуска — понятные шаги и прямой диалог с командой.</p>
+          <Link href="/about" className="text-link">Как устроена работа <ArrowUpRight size={18} aria-hidden="true" /></Link>
+        </div>
+        <div className="approach-principles">
+          <div><span>01</span><div><h3>Объём и бюджет — до старта</h3><p>Обсуждаем задачу, состав работ и сроки до начала проекта.</p></div></div>
+          <div><span>02</span><div><h3>Направление согласуем с вами</h3><p>Сначала структура и визуальный подход. Затем разработка.</p></div></div>
+          <div><span>03</span><div><h3>К запуску всё готово</h3><p>Проверяем сайт на телефонах и компьютерах, помогаем с публикацией.</p></div></div>
+        </div>
       </div>
     </section>
   );
@@ -95,15 +103,13 @@ export function Approach() {
 export function AISection() {
   return (
     <section className="ai-section section">
-      <AmbientBackdrop variant="network" />
       <div className="container">
         <SectionIntro
           label="Технологии со смыслом"
-          title="Искусственный интеллект. Практические решения."
+          title="Меньше рутины. Больше времени на клиентов."
         >
           <p>
-            Подключаем AI там, где он помогает работать: отвечать клиентам, обрабатывать заявки и
-            освобождать время команды.
+            AI разбирает запросы, готовит ответы и собирает данные. Ваша команда проверяет результат и принимает решения.
           </p>
         </SectionIntro>
         <AIFlow />
